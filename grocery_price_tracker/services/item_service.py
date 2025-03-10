@@ -17,19 +17,22 @@ def add_item(item: Item):
 
         # check if item already exists for this store
         existing_item = conn.execute(
-            "SELECT id FROM items WHERE name = ? AND store_id = ?",
+            "SELECT id, price FROM items WHERE name = ? AND store_id = ?",
             (item.name, store_id)
         ).fetchone()
 
         if existing_item:
+            item_id, old_price = existing_item["id"], existing_item["price"]
+
+            # update item with new price and timestamp
             conn.execute(
-                "UPDATE items SET price = ? WHERE id = ?",
-                (item.price, existing_item["id"])
+                "UPDATE items SET price = ?, date_added = CURRENT_TIMESTAMP WHERE id = ?",
+                (item.price, item_id)
             )
         else:
             # insert new item
             conn.execute(
-                "INSERT INTO items (name, store_id, price) VALUES (?, ?, ?)",
+                "INSERT INTO items (name, store_id, price, date_added) VALUES (?, ?, ?, CURRENT_TIMESTAMP)",
                 (item.name, store_id, item.price)
             )
 
@@ -49,22 +52,23 @@ def get_cheapest_item(name: str):
 
         # get all stores that sell at the lowest price
         results = conn.execute('''
-            SELECT items.id, items.name, stores.name AS store, items.price
+            SELECT items.id, items.name, stores.name AS store, items.price, items.date_added
             FROM items
             JOIN stores ON items.store_id = stores.id
             WHERE items.name = ? AND items.price = ?
         ''', (name, min_price)).fetchall()
 
-        return [dict(row) for row in results] if results else []
+        return [dict(row) for row in results]
 
 
 def get_all_items():
-    """fetches all items from the database, including store names"""
+    """fetches all items from the database, sorted by name then by date_added"""
     with get_connection() as conn:
         results = conn.execute('''
-            SELECT items.id, items.name, stores.name AS store, items.price
+            SELECT items.id, items.name, stores.name AS store, items.price, items.date_added
             FROM items
             JOIN stores ON items.store_id = stores.id
+            ORDER BY items.name ASC, items.date_added DESC
         ''').fetchall()
 
         return [dict(row) for row in results]

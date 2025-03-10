@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -12,3 +14,4 @@ class ItemResponse(BaseModel):
     name: str
     store: str
     price: float
+    date_added: datetime

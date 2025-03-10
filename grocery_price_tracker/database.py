@@ -27,6 +27,7 @@ def initialize_database():
                 name TEXT NOT NULL,
                 store_id INTEGER NOT NULL,
                 price REAL NOT NULL,
+                date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(name, store_id),
                 FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
             )

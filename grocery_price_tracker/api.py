@@ -39,7 +39,7 @@ def create_item(item: Item):
     return {"message": f"item '{item.name}' added/updated successfully"}
 
 
-@app.get("/items/", response_model=list[Item])
+@app.get("/items/", response_model=list[ItemResponse])
 def list_items():
     """returns all items in the database"""
     items = get_all_items()
