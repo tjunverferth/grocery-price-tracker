@@ -46,3 +46,4 @@ uvicorn grocery_price_tracker.api:app --reload
 | get cheapest item | `GET`     | `/items/{name}/cheapest` | — |
 | add store         | `POST`    | `/stores/`              | `{"name": "Walmart"}` |
 | list all stores   | `GET`     | `/stores/`              | — |
+| get price history | `GET`     | `/items/{name}/history` | — |

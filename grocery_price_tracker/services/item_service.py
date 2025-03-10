@@ -24,11 +24,18 @@ def add_item(item: Item):
         if existing_item:
             item_id, old_price = existing_item["id"], existing_item["price"]
 
-            # update item with new price and timestamp
-            conn.execute(
-                "UPDATE items SET price = ?, date_added = CURRENT_TIMESTAMP WHERE id = ?",
-                (item.price, item_id)
-            )
+            if old_price != item.price:
+                # log the price change in price_history
+                conn.execute(
+                    "INSERT INTO price_history (item_id, old_price, new_price) VALUES (?, ?, ?)",
+                    (item_id, old_price, item.price)
+                )
+
+                # update the item with the new price and timestamp
+                conn.execute(
+                    "UPDATE items SET price = ?, date_added = CURRENT_TIMESTAMP WHERE id = ?",
+                    (item.price, item_id)
+                )
         else:
             # insert new item
             conn.execute(
@@ -72,3 +79,19 @@ def get_all_items():
         ''').fetchall()
 
         return [dict(row) for row in results]
+
+
+def get_price_history(name: str):
+    """fetches price history for a given item across all stores"""
+    with get_connection() as conn:
+        results = conn.execute('''
+            SELECT price_history.item_id, items.name, stores.name AS store, 
+                   price_history.old_price, price_history.new_price, price_history.change_date
+            FROM price_history
+            JOIN items ON price_history.item_id = items.id
+            JOIN stores ON items.store_id = stores.id
+            WHERE items.name = ?
+            ORDER BY price_history.change_date DESC
+        ''', (name,)).fetchall()
+
+        return [dict(row) for row in results] if results else []
