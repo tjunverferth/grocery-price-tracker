@@ -36,11 +36,13 @@ uvicorn grocery_price_tracker.api:app --reload
 
 ---
 
-## API Endpoints
+## API endpoints
 
-| **Action**        | **Method** | **URL**                | **Example Data** |
-|-------------------|-----------|------------------------|------------------|
-| get API root      | `GET`     | `/`                    | — |
-| add / update item | `POST`    | `/items/`              | `{"name": "milk", "store": "Walmart", "price": 3.50}` |
-| list all items    | `GET`     | `/items/`              | — |
-| get cheapest item | `GET`     | `/items/{name}`        | — |
+| **Action**        | **Method** | **URL**                 | **Example Data** |
+|-------------------|-----------|-------------------------|------------------|
+| get API root      | `GET`     | `/`                     | — |
+| add / update item | `POST`    | `/items/`               | `{"name": "milk", "store": "Walmart", "price": 3.50}` |
+| list all items    | `GET`     | `/items/`               | — |
+| get cheapest item | `GET`     | `/items/{name}/cheapest` | — |
+| add store         | `POST`    | `/stores/`              | `{"name": "Walmart"}` |
+| list all stores   | `GET`     | `/stores/`              | — |
