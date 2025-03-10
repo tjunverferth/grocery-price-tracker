@@ -21,4 +21,3 @@ def initialize_database():
                 UNIQUE(name, store)
             )
         ''')
-

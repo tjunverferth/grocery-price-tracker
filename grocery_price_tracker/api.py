@@ -16,7 +16,7 @@ def read_root():
 def create_item(item: Item):
     """adds an item or updates price if it already exists"""
     add_item(item)
-    return {"message": f"item '{item.name}' added/updated successfully!"}
+    return {"message": f"item '{item.name}' added/updated successfully"}
 
 
 @app.get("/items/", response_model=list[Item])

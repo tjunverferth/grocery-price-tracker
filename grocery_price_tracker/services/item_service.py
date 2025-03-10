@@ -3,7 +3,7 @@ from grocery_price_tracker.models.item import Item
 
 
 def add_item(item: Item):
-    """adds or updates an item in the database."""
+    """adds or updates an item in the database"""
     with get_connection() as conn:
         conn.execute(
             '''
@@ -16,7 +16,7 @@ def add_item(item: Item):
 
 
 def get_cheapest_item(name: str):
-    """finds the cheapest item by name across all stores."""
+    """finds the cheapest item by name across all stores"""
     with get_connection() as conn:
         result = conn.execute(
             'SELECT * FROM items WHERE name = ? ORDER BY price ASC LIMIT 1',
@@ -27,7 +27,7 @@ def get_cheapest_item(name: str):
 
 
 def get_all_items():
-    """fetches all items from the database."""
+    """fetches all items from the database"""
     with get_connection() as conn:
         results = conn.execute('SELECT * FROM items ORDER BY name ASC').fetchall()
         return [dict(row) for row in results]
