@@ -1,0 +1,22 @@
+# SQLite database file
+*.db
+*.sqlite3
+
+# Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+
+# environment variables
+.env
+
+# virtual environment
+venv/
+.env/
+.venv/
+
+# system/macOS files
+.DS_Store
+
+# PyCharm settings
+.idea/
