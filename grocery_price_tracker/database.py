@@ -27,7 +27,20 @@ def initialize_database():
                 name TEXT NOT NULL,
                 store_id INTEGER NOT NULL,
                 price REAL NOT NULL,
+                date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(name, store_id),
                 FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+            )
+        ''')
+
+        # create price history table
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS price_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                item_id INTEGER NOT NULL,
+                old_price REAL NOT NULL,
+                new_price REAL NOT NULL,
+                change_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
             )
         ''')

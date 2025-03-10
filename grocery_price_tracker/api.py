@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from grocery_price_tracker.database import initialize_database
-from grocery_price_tracker.models.item import Item, ItemResponse
+from grocery_price_tracker.models.item import Item, ItemResponse, PriceHistoryResponse
 from grocery_price_tracker.models.store import Store
-from grocery_price_tracker.services.item_service import add_item, get_cheapest_item, get_all_items
+from grocery_price_tracker.services.item_service import add_item, get_cheapest_item, get_all_items, get_price_history
 from grocery_price_tracker.services.store_service import get_store_by_name, add_store, get_all_stores
 
 initialize_database()
@@ -39,7 +39,7 @@ def create_item(item: Item):
     return {"message": f"item '{item.name}' added/updated successfully"}
 
 
-@app.get("/items/", response_model=list[Item])
+@app.get("/items/", response_model=list[ItemResponse])
 def list_items():
     """returns all items in the database"""
     items = get_all_items()
@@ -55,3 +55,14 @@ def get_cheapest(name: str):
         raise HTTPException(status_code=404, detail=f"no stores found for item '{name}'")
 
     return cheapest_items
+
+
+@app.get("/items/{name}/history", response_model=list[PriceHistoryResponse])
+def price_history(name: str):
+    """returns the price history of a given item"""
+    history = get_price_history(name)
+
+    if not history:
+        raise HTTPException(status_code=404, detail=f"no price history found for item '{name}'")
+
+    return history
